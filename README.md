@@ -1,13 +1,15 @@
 # WebColor
-WebColor is very convenient to show web color! 
+WebColor is very convenient to show web color in  swift!
 
-##要求
-iOS7+，xcode8.1+，swift 3
+##Requirements
+* iOS 7.0+
+* Xcode 8.1+
+* Swift 3.0+
 
-##安装
-将class目录下的文件导入工程即可
+##Installation
+Download the project and copy the Class folder into your project to use it in
 
-##使用
+##Usage
 <pre>
 let _ = "rgb(120, 232, 100)".color()
 let _ = "rgba(255, 0, 0, 0.5)".color()
