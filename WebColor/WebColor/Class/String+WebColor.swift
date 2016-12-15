@@ -439,6 +439,18 @@ public extension String {
     }
 }
 
+public extension UIColor {
+    
+    public convenience init(_ webColor: String, defaultColor: UIColor = .clear) {
+        let color = webColor.color()
+        if let color = color {
+            self.init(cgColor: color.cgColor)
+        } else {
+            self.init(cgColor: defaultColor.cgColor)
+        }
+    }
+}
+
 
 //MARK: - UIColor extension
 extension UIColor {
