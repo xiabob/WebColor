@@ -16,22 +16,45 @@ fileprivate let hexRegex = try? NSRegularExpression(pattern: "[0-9A-Fa-f]{3,8}",
 
 //MARK: - HEX
 public extension String {
-    //000
+    //#000
     func shortRgbHexCodeColor() -> UIColor? {
         var color = colorsCache.object(forKey: self as AnyObject)
         if color != nil {return color}
         
-        if utf8.count == 3 {
-            let r = substring(to: index(startIndex, offsetBy: 1))
-            
-            let range = index(startIndex, offsetBy: 1) ..< index(startIndex, offsetBy: 2)
-            let g = substring(with: range)
-            
-            let b = substring(from: index(endIndex, offsetBy: -1))
-            
-            let rgbCode = r + r + g + g + b + b
-            color = rgbCode.rgbHexCodeColor()
+        var hexCode: UInt32 = 0
+        //scan hex int
+        let scanner = Scanner(string: self)
+        scanner.scanHexInt32(&hexCode)
+        
+        let divisor = CGFloat(15)
+        let r = CGFloat(hexCode  >> 8)          / divisor
+        let g = CGFloat((hexCode >> 4) & 0x0F)  / divisor
+        let b = CGFloat(hexCode        & 0x00F) / divisor
+        color = UIColor(red: r, green: g, blue: b, alpha: CGFloat(1))
+        
+        if color != nil {
+            colorsCache.setObject(color!, forKey: self as AnyObject)
         }
+        
+        return color
+    }
+    
+    //#000f
+    func shortRgbaHexCodeColor() -> UIColor? {
+        var color = colorsCache.object(forKey: self as AnyObject)
+        if color != nil {return color}
+        
+        var hexCode: UInt32 = 0
+        //scan hex int
+        let scanner = Scanner(string: self)
+        scanner.scanHexInt32(&hexCode)
+        
+        let divisor = CGFloat(15)
+        let r = CGFloat(hexCode  >> 12)           / divisor
+        let g = CGFloat((hexCode >>  8) & 0x0F)   / divisor
+        let b = CGFloat((hexCode >>  4) & 0x00F)  / divisor
+        let a = CGFloat(hexCode         & 0x000F) / divisor
+        color = UIColor(red: r, green: g, blue: b, alpha: a)
         
         if color != nil {
             colorsCache.setObject(color!, forKey: self as AnyObject)
@@ -47,15 +70,16 @@ public extension String {
             return color
         }
         
-        var colorRGBhexaCode: UInt32 = 0
+        var hexCode: UInt32 = 0
         //scan hex int
         let scanner = Scanner(string: self)
-        scanner.scanHexInt32(&colorRGBhexaCode)
+        scanner.scanHexInt32(&hexCode)
         
-        let r = uint(colorRGBhexaCode  >> 16)
-        let g = uint((colorRGBhexaCode >>  8) & 0x00FF)
-        let b = uint(colorRGBhexaCode         & 0x0000FF)
-        color = UIColor(red: CGFloat(r)/CGFloat(255), green: CGFloat(g)/CGFloat(255), blue: CGFloat(b)/CGFloat(255), alpha: CGFloat(1))
+        let divisor = CGFloat(255)
+        let r = CGFloat(hexCode  >> 16)             / divisor
+        let g = CGFloat((hexCode >>  8) & 0x00FF)   / divisor
+        let b = CGFloat(hexCode         & 0x0000FF) / divisor
+        color = UIColor(red: r, green: g, blue: b, alpha: CGFloat(1))
         
         if color != nil {
             colorsCache.setObject(color!, forKey: self as AnyObject)
@@ -71,16 +95,17 @@ public extension String {
             return color
         }
         
-        var colorRGBhexaCode: UInt32 = 0
+        var hexCode: UInt32 = 0
         //scan hex int
         let scanner = Scanner(string: self)
-        scanner.scanHexInt32(&colorRGBhexaCode)
+        scanner.scanHexInt32(&hexCode)
         
-        let r = uint(colorRGBhexaCode  >> 24)
-        let g = uint((colorRGBhexaCode >> 16) & 0x00FF)
-        let b = uint((colorRGBhexaCode >>  8) & 0x0000FF)
-        let a = uint(colorRGBhexaCode         & 0x000000FF)
-        color = UIColor(red: CGFloat(r)/CGFloat(255), green: CGFloat(g)/CGFloat(255), blue: CGFloat(b)/CGFloat(255), alpha: CGFloat(a)/CGFloat(255))
+        let divisor = CGFloat(255)
+        let r = CGFloat(hexCode  >> 24)               / divisor
+        let g = CGFloat((hexCode >> 16) & 0x00FF)     / divisor
+        let b = CGFloat((hexCode >>  8) & 0x0000FF)   / divisor
+        let a = CGFloat(hexCode         & 0x000000FF) / divisor
+        color = UIColor(red: r, green: g, blue: b, alpha: a)
         
         if color != nil {
             colorsCache.setObject(color!, forKey: self as AnyObject)
@@ -104,6 +129,8 @@ public extension String {
         let length = colorCode.utf8.count
         if length == 3 { //#000
             color = colorCode.shortRgbHexCodeColor()
+        } else if length == 4 { //#0000
+            color = colorCode.shortRgbaHexCodeColor()
         } else if length == 6 { //#000000
             color = colorCode.rgbHexCodeColor()
         } else if length == 8 { //#00000000
