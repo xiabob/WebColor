@@ -7,6 +7,12 @@ WebColor is very convenient to show web color in  swift!
 * Swift 3.0+
 
 ##Installation
+####CocoaPods
+<pre>
+pod 'WebColor'
+</pre>
+
+####Manually
 Download the project and copy the Class folder into your project to use it in
 
 ##Usage
