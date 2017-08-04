@@ -1,21 +1,21 @@
 # WebColor
 WebColor is very convenient to show web color in  swift!
 
-##Requirements
-* iOS 7.0+
+## Requirements
+* iOS 8.0+
 * Xcode 8.1+
 * Swift 3.0+
 
-##Installation
-####CocoaPods
+## Installation
+#### CocoaPods
 <pre>
 pod 'WebColor'
 </pre>
 
-####Manually
+#### Manually
 Download the project and copy the Class folder into your project to use it in
 
-##Usage
+## Usage
 <pre>
 let _ = "rgb(120, 232, 100)".color()
 let _ = "rgba(255, 0, 0, 0.5)".color()
